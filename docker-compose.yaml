@@ -1,6 +1,18 @@
 version: '3'
 
 services:
+  reverse-proxy:
+    image: traefik:v2.3
+    command:
+      - "--entryPoints.web.address=:80"
+      - "--api.insecure=true"
+      - "--providers.docker"
+      - "--providers.docker.exposedbydefault=false"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
   saga-purchase:
     image: minghsu0107/saga-purchase:latest
     restart: always
@@ -14,6 +26,14 @@ services:
     depends_on:
       - nats-streaming
       - saga-account
+    expose:
+      - "80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`localhost`) && PathPrefix(`/api/purchase`)"
+      - "traefik.http.routers.backend.entrypoints=web"
+      - "traefik.http.routers.backend.service=saga-purchase"
+      - "traefik.http.services.saga-purchase.loadbalancer.server.port=80"
   saga-account:
     image: minghsu0107/saga-account:latest
     restart: always
@@ -25,6 +45,15 @@ services:
     depends_on:
       - accountdb
       - redis-cluster-creator
+    expose:
+      - "80"
+      - "8000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`localhost`) && (PathPrefix(`/api/auth`) || PathPrefix(`/api/info`))"
+      - "traefik.http.routers.backend.entrypoints=web"
+      - "traefik.http.routers.backend.service=saga-account"
+      - "traefik.http.services.saga-account.loadbalancer.server.port=80"
   nats-streaming:
     image: nats-streaming:0.11.2
     restart: unless-stopped
