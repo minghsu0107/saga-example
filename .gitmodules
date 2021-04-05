@@ -1,6 +1,0 @@
-[submodule "saga-pb"]
-	path = saga-pb
-	url = https://github.com/minghsu0107/saga-pb
-[submodule "saga-purchase"]
-	path = saga-purchase
-	url = https://github.com/minghsu0107/saga-purchase

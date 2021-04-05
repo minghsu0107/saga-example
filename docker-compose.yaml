@@ -1,0 +1,113 @@
+version: '3'
+
+services:
+  saga-purchase:
+    image: minghsu0107/saga-purchase:latest
+    restart: always
+    environment:
+      NATS_CLUSTER_ID: "test-cluster"
+      NATS_URL: "nats://nats-streaming:4222"
+      NATS_CLIENT_ID: "purchasesvc-1"
+      RPC_AUTH_SVC_HOST: "saga-account:8000"
+      RPC_PRODUCT_SVC_HOST: ""
+  saga-account:
+    image: minghsu0107/saga-account:latest
+    restart: always
+    environment:
+      DB_DSN: "ming:password@tcp(accountdb:3306)/account?charset=utf8mb4&parseTime=True&loc=Local"
+      REDIS_ADDRS: "redis-node1:7000,redis-node1:7001,redis-node1:7002,redis-node1:7003,redis-node1:7004,redis-node1:7005"
+      REDIS_PASSWORD: ${REDIS_PASSWD}
+  nats-streaming:
+    image: nats-streaming:0.11.2
+    restart: unless-stopped
+  accountdb:
+    image: mysql:8.0
+    restart: always
+    ports:
+      - 3306:3306
+    command: --init-file /init.sql 
+             --default-authentication-plugin=mysql_native_password
+             --character-set-server=utf8mb4
+             --collation-server=utf8mb4_general_ci
+             --lower_case_table_names=1
+             --max_allowed_packet=128M;
+    environment:
+      MYSQL_USER: ming
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: account
+    volumes:
+      - mysql_data:/var/lib/mysql
+  redis-node1:
+    build:
+      context: redis
+    ports:
+      - 7000:7000
+      - 17000:17000
+    restart: always
+    entrypoint: [redis-server, /etc/redis/rediscluster.conf, --port,"7000", --cluster-announce-ip,"${REDIS_CLUSTER_IP}"]
+  redis-node2:
+    build:
+      context: redis
+    ports:
+      - 7001:7001
+      - 17001:17001
+    restart: always
+    entrypoint: [redis-server, /etc/redis/rediscluster.conf,--port,"7001",--cluster-announce-ip,"${REDIS_CLUSTER_IP}"]
+  redis-node3:
+    build:
+      context: redis
+    ports:
+      - 7002:7002
+      - 17002:17002
+    restart: always
+    entrypoint: [redis-server, /etc/redis/rediscluster.conf,--port,"7002",--cluster-announce-ip,"${REDIS_CLUSTER_IP}"]
+  redis-node4:
+    build:
+      context: redis
+    ports:
+      - 7003:7003
+      - 17003:17003
+    restart: always
+    entrypoint: [redis-server, /etc/redis/rediscluster.conf,--port,"7003",--cluster-announce-ip,"${REDIS_CLUSTER_IP}"]
+    depends_on:
+      - redis-node1
+      - redis-node2
+      - redis-node3
+  redis-node5:
+    build:
+      context: redis
+    ports:
+      - 7004:7004
+      - 17004:17004
+    restart: always
+    entrypoint: [redis-server, /etc/redis/rediscluster.conf,--port,"7004",--cluster-announce-ip,"${REDIS_CLUSTER_IP}"]
+    depends_on:
+      - redis-node1
+      - redis-node2
+      - redis-node3
+  redis-node6:
+    build:
+      context: redis
+    ports:
+      - 7005:7005
+      - 17005:17005
+    restart: always
+    entrypoint: [redis-server, /etc/redis/rediscluster.conf,--port,"7005",--cluster-announce-ip,"${REDIS_CLUSTER_IP}"]
+    depends_on:
+      - redis-node1
+      - redis-node2
+      - redis-node3
+  redis-cluster-creator:
+    image: redis:5.0.1-alpine
+    entrypoint: [/bin/sh,-c,'echo "yes" | redis-cli -a ${REDIS_PASSWD} --cluster create ${REDIS_CLUSTER_IP}:7000 ${REDIS_CLUSTER_IP}:7001 ${REDIS_CLUSTER_IP}:7002 ${REDIS_CLUSTER_IP}:7003 ${REDIS_CLUSTER_IP}:7004 ${REDIS_CLUSTER_IP}:7005 --cluster-replicas 1']
+    depends_on:
+      - redis-node1
+      - redis-node2
+      - redis-node3
+      - redis-node4
+      - redis-node5
+      - redis-node6
+
+volumes:
+  mysql_data:
