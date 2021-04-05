@@ -30,9 +30,9 @@ services:
       - "80"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`localhost`) && PathPrefix(`/api/purchase`)"
-      - "traefik.http.routers.backend.entrypoints=web"
-      - "traefik.http.routers.backend.service=saga-purchase"
+      - "traefik.http.routers.saga-purchase.rule=PathPrefix(`/api/purchase`)"
+      - "traefik.http.routers.saga-purchase.entrypoints=web"
+      - "traefik.http.routers.saga-purchase.service=saga-purchase"
       - "traefik.http.services.saga-purchase.loadbalancer.server.port=80"
   saga-account:
     image: minghsu0107/saga-account:latest
@@ -50,13 +50,15 @@ services:
       - "8000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`localhost`) && (PathPrefix(`/api/auth`) || PathPrefix(`/api/info`))"
-      - "traefik.http.routers.backend.entrypoints=web"
-      - "traefik.http.routers.backend.service=saga-account"
+      - "traefik.http.routers.saga-account.rule=PathPrefix(`/api/auth`) || PathPrefix(`/api/info`)"
+      - "traefik.http.routers.saga-account.entrypoints=web"
+      - "traefik.http.routers.saga-account.service=saga-account"
       - "traefik.http.services.saga-account.loadbalancer.server.port=80"
   nats-streaming:
     image: nats-streaming:0.11.2
     restart: unless-stopped
+    ports:
+      - 4222:4222
   accountdb:
     image: mysql:8.0
     environment:
@@ -71,6 +73,8 @@ services:
       - --collation-server=utf8mb4_unicode_ci
       - --lower_case_table_names=1
       - --max_allowed_packet=128M
+    ports:
+      - 3306:3306
     volumes:
       - mysql_data:/var/lib/mysql
   redis-node1:
