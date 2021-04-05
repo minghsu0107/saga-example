@@ -5,37 +5,43 @@ services:
     image: minghsu0107/saga-purchase:latest
     restart: always
     environment:
+      GIN_MODE: "release"
       NATS_CLUSTER_ID: "test-cluster"
       NATS_URL: "nats://nats-streaming:4222"
       NATS_CLIENT_ID: "purchasesvc-1"
       RPC_AUTH_SVC_HOST: "saga-account:8000"
       RPC_PRODUCT_SVC_HOST: ""
+    depends_on:
+      - nats-streaming
+      - saga-account
   saga-account:
     image: minghsu0107/saga-account:latest
     restart: always
     environment:
+      GIN_MODE: "release"
       DB_DSN: "ming:password@tcp(accountdb:3306)/account?charset=utf8mb4&parseTime=True&loc=Local"
       REDIS_ADDRS: "redis-node1:7000,redis-node1:7001,redis-node1:7002,redis-node1:7003,redis-node1:7004,redis-node1:7005"
       REDIS_PASSWORD: ${REDIS_PASSWD}
+    depends_on:
+      - accountdb
+      - redis-cluster-creator
   nats-streaming:
     image: nats-streaming:0.11.2
     restart: unless-stopped
   accountdb:
     image: mysql:8.0
-    restart: always
-    ports:
-      - 3306:3306
-    command: --init-file /init.sql 
-             --default-authentication-plugin=mysql_native_password
-             --character-set-server=utf8mb4
-             --collation-server=utf8mb4_general_ci
-             --lower_case_table_names=1
-             --max_allowed_packet=128M;
     environment:
       MYSQL_USER: ming
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: account
+    command:
+      - mysqld
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --lower_case_table_names=1
+      - --max_allowed_packet=128M
     volumes:
       - mysql_data:/var/lib/mysql
   redis-node1:
