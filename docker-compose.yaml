@@ -22,7 +22,7 @@ services:
       NATS_URL: "nats://nats-streaming:4222"
       NATS_CLIENT_ID: "purchasesvc-1"
       RPC_AUTH_SVC_HOST: "saga-account:8000"
-      RPC_PRODUCT_SVC_HOST: ""
+      RPC_PRODUCT_SVC_HOST: "saga-product:8000"
     depends_on:
       - nats-streaming
       - saga-account
