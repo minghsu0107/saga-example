@@ -5,7 +5,7 @@ export REDIS_PASSWD=pass.123
 
 case "$1" in
     "run")
-        docker-compose up;;
+        docker-compose up --scale saga-account=3;;
     "stop")
         docker-compose stop;;
     *)

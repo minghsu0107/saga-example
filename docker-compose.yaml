@@ -21,8 +21,8 @@ services:
       NATS_CLUSTER_ID: "test-cluster"
       NATS_URL: "nats://nats-streaming:4222"
       NATS_CLIENT_ID: "purchasesvc-1"
-      RPC_AUTH_SVC_HOST: "saga-account:8000"
-      RPC_PRODUCT_SVC_HOST: "saga-product:8000"
+      RPC_AUTH_SVC_HOST: "reverse-proxy:80"
+      RPC_PRODUCT_SVC_HOST: "reverse-proxy:80"
     depends_on:
       - nats-streaming
       - saga-account
@@ -50,10 +50,15 @@ services:
       - "8000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.saga-account.rule=PathPrefix(`/api/auth`) || PathPrefix(`/api/info`)"
-      - "traefik.http.routers.saga-account.entrypoints=web"
-      - "traefik.http.routers.saga-account.service=saga-account"
-      - "traefik.http.services.saga-account.loadbalancer.server.port=80"
+      - "traefik.http.routers.saga-account-http.rule=PathPrefix(`/api/auth`) || PathPrefix(`/api/info`)"
+      - "traefik.http.routers.saga-account-http.entrypoints=web"
+      - "traefik.http.routers.saga-account-http.service=saga-account-http"
+      - "traefik.http.services.saga-account-http.loadbalancer.server.port=80"
+      - "traefik.http.routers.saga-account-grpc.rule=Headers(`content-type`,`application/grpc`) && Headers(`service-name`, `auth.AuthService`)"
+      - "traefik.http.routers.saga-account-grpc.entrypoints=web"
+      - "traefik.http.routers.saga-account-grpc.service=saga-account-grpc"
+      - "traefik.http.services.saga-account-grpc.loadbalancer.server.port=8000"
+      - "traefik.http.services.saga-account-grpc.loadbalancer.server.scheme=h2c"
   nats-streaming:
     image: nats-streaming:0.11.2
     restart: unless-stopped
