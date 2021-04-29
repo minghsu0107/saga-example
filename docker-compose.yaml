@@ -88,7 +88,7 @@ services:
       - --collation-server=utf8mb4_unicode_ci
       - --lower_case_table_names=1
       - --max_allowed_packet=128M
-      - --max-connections=10000
+      - --max-connections=10000 # default: 151
     ports:
       - 3306:3306
     volumes:
