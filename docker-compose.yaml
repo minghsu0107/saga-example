@@ -8,6 +8,13 @@ services:
       - "--api.insecure=true"
       - "--providers.docker"
       - "--providers.docker.exposedbydefault=false"
+      - --tracing=true
+      - --tracing.zipkin=true
+      - --tracing.zipkin.httpEndpoint=http://oc-collector:9411/api/v2/spans
+      - --tracing.zipkin.sameSpan=true
+      - --tracing.zipkin.id128Bit=true
+      - --tracing.zipkin.sampleRate=1
+      - --accesslog=true # output log to stdout
     ports:
       - "80:80"
       - "8080:8080"
@@ -24,6 +31,7 @@ services:
       # RPC_AUTH_SVC_HOST: "saga-account:8000" # using client LB
       RPC_AUTH_SVC_HOST: "reverse-proxy:80" # using traefik L4 LB
       RPC_PRODUCT_SVC_HOST: "reverse-proxy:80"
+      OC_AGENT_HOST: "oc-collector:55678"
     depends_on:
       - nats-streaming
       - saga-account
@@ -43,6 +51,7 @@ services:
       DB_DSN: "ming:password@tcp(accountdb:3306)/account?charset=utf8mb4&parseTime=True&loc=Local"
       REDIS_ADDRS: "redis-node1:7000,redis-node1:7001,redis-node1:7002,redis-node1:7003,redis-node1:7004,redis-node1:7005"
       REDIS_PASSWORD: ${REDIS_PASSWD}
+      OC_AGENT_HOST: "oc-collector:55678"
     depends_on:
       - accountdb
       - redis-cluster-creator
@@ -83,6 +92,19 @@ services:
       - 3306:3306
     volumes:
       - mysql_data:/var/lib/mysql
+  jaeger:
+    image: jaegertracing/all-in-one:1.22
+    ports:
+      - 14268:14268
+      - 16686:16686
+  oc-collector:
+    image: omnition/opencensus-collector:0.1.10
+    command:
+      - --config=/conf/occollector-config.yaml
+    ports:
+      - 55678:55678
+    volumes:
+      - ./occollector/occollector-config.yaml:/conf/occollector-config.yaml
   redis-node1:
     build:
       context: redis
