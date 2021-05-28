@@ -73,10 +73,15 @@ services:
     image: minghsu0107/saga-product:latest
     restart: always
     environment:
+      APP: "product"
       GIN_MODE: "release"
       DB_DSN: "ming:password@tcp(productdb:3306)/product?charset=utf8mb4&parseTime=True&loc=Local"
       REDIS_ADDRS: "redis-node1:7000,redis-node1:7001,redis-node1:7002,redis-node1:7003,redis-node1:7004,redis-node1:7005"
       REDIS_PASSWORD: ${REDIS_PASSWD}
+      NATS_CLUSTER_ID: "test-cluster"
+      NATS_URL: "nats://nats-streaming:4222"
+      NATS_QUEUE_GROUP: "product-queue"
+      NATS_DURABLE_NAME: "product-durable"
       OC_AGENT_HOST: "oc-collector:55678"
     depends_on:
       - productdb
@@ -95,6 +100,71 @@ services:
       - "traefik.http.routers.saga-product-grpc.service=saga-product-grpc"
       - "traefik.http.services.saga-product-grpc.loadbalancer.server.port=8000"
       - "traefik.http.services.saga-product-grpc.loadbalancer.server.scheme=h2c"
+  saga-order:
+    image: minghsu0107/saga-product:latest
+    restart: always
+    environment:
+      APP: "order"
+      GIN_MODE: "release"
+      DB_DSN: "ming:password@tcp(orderdb:3306)/order?charset=utf8mb4&parseTime=True&loc=Local"
+      REDIS_ADDRS: "redis-node1:7000,redis-node1:7001,redis-node1:7002,redis-node1:7003,redis-node1:7004,redis-node1:7005"
+      REDIS_PASSWORD: ${REDIS_PASSWD}
+      NATS_CLUSTER_ID: "test-cluster"
+      NATS_URL: "nats://nats-streaming:4222"
+      NATS_QUEUE_GROUP: "order-queue"
+      NATS_DURABLE_NAME: "order-durable"
+      RPC_AUTH_SVC_HOST: "reverse-proxy:80"
+      RPC_PRODUCT_SVC_HOST: "reverse-proxy:80"
+      OC_AGENT_HOST: "oc-collector:55678"
+    depends_on:
+      - orderdb
+      - saga-account
+      - saga-product
+      - redis-cluster-creator
+    expose:
+      - "80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.saga-order-http.rule=PathPrefix(`/api/order`)"
+      - "traefik.http.routers.saga-order-http.entrypoints=web"
+      - "traefik.http.routers.saga-order-http.service=saga-order-http"
+      - "traefik.http.services.saga-order-http.loadbalancer.server.port=80"
+  saga-payment:
+    image: minghsu0107/saga-product:latest
+    restart: always
+    environment:
+      APP: "payment"
+      GIN_MODE: "release"
+      DB_DSN: "ming:password@tcp(paymentdb:3306)/payment?charset=utf8mb4&parseTime=True&loc=Local"
+      REDIS_ADDRS: "redis-node1:7000,redis-node1:7001,redis-node1:7002,redis-node1:7003,redis-node1:7004,redis-node1:7005"
+      REDIS_PASSWORD: ${REDIS_PASSWD}
+      NATS_CLUSTER_ID: "test-cluster"
+      NATS_URL: "nats://nats-streaming:4222"
+      NATS_QUEUE_GROUP: "payment-queue"
+      NATS_DURABLE_NAME: "payment-durable"
+      RPC_AUTH_SVC_HOST: "reverse-proxy:80"
+      OC_AGENT_HOST: "oc-collector:55678"
+    depends_on:
+      - paymentdb
+      - saga-account
+      - redis-cluster-creator
+    expose:
+      - "80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.saga-payment-http.rule=PathPrefix(`/api/payment`)"
+      - "traefik.http.routers.saga-payment-http.entrypoints=web"
+      - "traefik.http.routers.saga-payment-http.service=saga-payment-http"
+      - "traefik.http.services.saga-payment-http.loadbalancer.server.port=80"
+  saga-orchestrator:
+    image: minghsu0107/saga-product:latest
+    restart: always
+    environment:
+      APP: "orchestrator"
+      NATS_CLUSTER_ID: "test-cluster"
+      NATS_URL: "nats://nats-streaming:4222"
+      NATS_QUEUE_GROUP: "orchestrator-queue"
+      NATS_DURABLE_NAME: "orchestrator-durable"
   nats-streaming:
     image: nats-streaming:0.11.2
     restart: unless-stopped
@@ -138,6 +208,44 @@ services:
       - 3307:3306
     volumes:
       - mysql_data_product:/var/lib/mysql
+  orderdb:
+    image: mysql:8.0
+    environment:
+      MYSQL_USER: ming
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: order
+    command:
+      - mysqld
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --lower_case_table_names=1
+      - --max_allowed_packet=128M
+      - --max-connections=10000
+    ports:
+      - 3308:3306
+    volumes:
+      - mysql_data_order:/var/lib/mysql
+  paymentdb:
+    image: mysql:8.0
+    environment:
+      MYSQL_USER: ming
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: payment
+    command:
+      - mysqld
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --lower_case_table_names=1
+      - --max_allowed_packet=128M
+      - --max-connections=10000
+    ports:
+      - 3309:3306
+    volumes:
+      - mysql_data_payment:/var/lib/mysql
   jaeger:
     image: jaegertracing/all-in-one:1.22
     ports:
@@ -225,3 +333,5 @@ services:
 volumes:
   mysql_data_account:
   mysql_data_product:
+  mysql_data_order:
+  mysql_data_payment:
