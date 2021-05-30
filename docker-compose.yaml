@@ -169,6 +169,13 @@ services:
     restart: unless-stopped
     ports:
       - 4222:4222
+  prometheus:
+    image: prom/prometheus:v2.25.2
+    volumes:
+      - ./prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml
+    command: --config.file=/etc/prometheus/prometheus.yaml
+    ports:
+      - 9090:9090
   accountdb:
     image: mysql:8.0
     environment:
