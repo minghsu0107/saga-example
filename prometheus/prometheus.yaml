@@ -15,19 +15,19 @@ scrape_configs:
   
   - job_name: 'purchase_monitor'
     static_configs:
-    - targets: ['saga-purchase:8080']
+    - targets: ['saga-example_saga-purchase_1:8080', 'saga-example_saga-purchase_2:8080']
   - job_name: 'account_monitor'
     static_configs:
-    - targets: ['saga-account:8080']
+    - targets: ['saga-example_saga-account_1:8080','saga-example_saga-account_2:8080','saga-example_saga-account_3:8080']
   - job_name: 'product_monitor'
     static_configs:
-    - targets: ['saga-product:8080']
+    - targets: ['saga-example_saga-product_1:8080','saga-example_saga-product_2:8080']
   - job_name: 'order_monitor'
     static_configs:
-    - targets: ['saga-order:8080']
+    - targets: ['saga-example_saga-order_1:8080','saga-example_saga-order_2:8080']
   - job_name: 'payment_monitor'
     static_configs:
-    - targets: ['saga-payment:8080']
+    - targets: ['saga-example_saga-payment_1:8080','saga-example_saga-payment_2:8080']
   - job_name: 'orchestrator_monitor'
     static_configs:
-    - targets: ['saga-orchestrator:8080']
+    - targets: ['saga-example_saga-orchestrator_1:8080', 'saga-example_saga-orchestrator_2:8080']
