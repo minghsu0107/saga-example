@@ -2,7 +2,7 @@ receivers:
   opencensus:
     port: 55678
     # Changes the maximum msg size that can be received (default is 4MiB)
-    max-recv-msg-size-mib: 32
+    max-recv-msg-size-mib: 64
     # Limits the maximum number of concurrent streams for each receiver transport (default is 100)
     max-concurrent-streams: 50
     # for helping load-balancing
@@ -18,7 +18,7 @@ receivers:
         time: 30s
         # timeout is the wait time after a ping that the server waits for the response before closing the
         # connection. The default is 20 seconds.
-        timeout: 5s
+        timeout: 15s
   zipkin:
     port: 9411
   jaeger:
@@ -26,9 +26,9 @@ receivers:
 queued-exporters:
   my-jaeger-collector:
     # the number of queue workers that will be dequeuing batches and sending them out (default is 10)
-    num-workers: 4
+    num-workers: 12
     # default is 5000
-    queue-size: 100
+    queue-size: 8000
     # indicates whether queue processor should retry span batches in case of processing failure
     retry-on-failure: true
     sender-type: jaeger-thrift-http

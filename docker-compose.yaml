@@ -50,6 +50,8 @@ services:
       DB_DSN: "ming:password@tcp(accountdb:3306)/account?charset=utf8mb4&parseTime=True&loc=Local"
       REDIS_ADDRS: "redis-node1:7000,redis-node1:7001,redis-node1:7002,redis-node1:7003,redis-node1:7004,redis-node1:7005"
       REDIS_PASSWORD: ${REDIS_PASSWD}
+      JWT_ACCESS_TOKEN_EXPIRE_SECOND: "10800"
+      JWT_REFRESH_TOKEN_EXPIRE_SECOND: "86400"
       OC_AGENT_HOST: "oc-collector:55678"
     depends_on:
       - accountdb
@@ -164,6 +166,7 @@ services:
       NATS_URL: "nats://nats-streaming:4222"
       NATS_QUEUE_GROUP: "orchestrator-queue"
       NATS_DURABLE_NAME: "orchestrator-durable"
+      OC_AGENT_HOST: "oc-collector:55678"
   nats-streaming:
     image: nats-streaming:0.11.2
     restart: unless-stopped
