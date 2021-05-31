@@ -28,7 +28,7 @@ services:
       NATS_CLUSTER_ID: "test-cluster"
       NATS_URL: "nats://nats-streaming:4222"
       # RPC_AUTH_SVC_HOST: "saga-account:8000" # using client LB
-      RPC_AUTH_SVC_HOST: "reverse-proxy:80" # using traefik L4 LB
+      RPC_AUTH_SVC_HOST: "reverse-proxy:80" # using traefik LB
       RPC_PRODUCT_SVC_HOST: "reverse-proxy:80"
       OC_AGENT_HOST: "oc-collector:55678"
     depends_on:
