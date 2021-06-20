@@ -1,5 +1,7 @@
 # Saga Example
-This repositroy provides an all-in-one docker-compose manifest that runs saga microservices locally. This includes:
+A saga pattern implementation dealing with distributed transactions in a Microservices architecture, written in Golang.
+
+An all-in-one docker-compose deployment is provided, which includes the following components:
 - Traefik - edge proxy that is responsible for external traffic routing and internal grpc load-balancing. 
 - [account service](https://github.com/minghsu0107/saga-account) - service that handles login, sigup, authentication, and token management.
 - [purchase service](https://github.com/minghsu0107/saga-purchase) - service that creates purchase and streams results of each saga step.
@@ -20,7 +22,7 @@ This repositroy provides an all-in-one docker-compose manifest that runs saga mi
   - Jaeger - preserveing and querying tracing spans.
 - NATS Streaming - message broker for saga events and streaming results.
 ## Usage
-One-shot deployment:
+To run all services locally, execute the following command.
 ```bash
 docker-compose up -d
 ```
