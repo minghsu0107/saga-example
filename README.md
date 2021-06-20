@@ -1,6 +1,12 @@
 # Saga Example
 A saga pattern implementation dealing with distributed transactions in a Microservices architecture, written in Golang.
 
+Related repositories:
+- https://github.com/minghsu0107/saga-purchase
+- https://github.com/minghsu0107/saga-account
+- https://github.com/minghsu0107/saga-product
+- https://github.com/minghsu0107/saga-pb
+
 An all-in-one docker-compose deployment is provided, which includes the following components:
 - Traefik - edge proxy that is responsible for external traffic routing and internal grpc load-balancing. 
 - [account service](https://github.com/minghsu0107/saga-account) - service that handles login, sigup, authentication, and token management.
