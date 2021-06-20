@@ -25,7 +25,7 @@ One-shot deployment:
 docker-compose up -d
 ```
 ### Account Service
-First, we need to signup an new user:
+First, we need to signup a new user:
 ```bash
 curl -X POST localhost/api/auth/signup \
     --data '{"password":"abcd5432","firstname":"ming","lastname":"hsu","email":"ming@ming.com","address":"taipei","phone_number":"1234567"}'
@@ -35,7 +35,7 @@ User account login:
 curl -X POST localhost/api/auth/login \
     --data '{"email":"ming@ming.com","password":"abcd5432"}'
 ```
-This will return a new token pair (refresh token + access token). We should provide the access token in the `Authoriation` header for those APIs with authentication.
+This will return a new token pair (refresh token + access token). We should provide the access token in the `Authorization` header for those APIs with authentication.
 
 We could obtain a new token pair by refreshing with the refresh token:
 ```bash
@@ -82,13 +82,13 @@ curl "localhost/api/product/<product_id>"
 ```
 This will return the name, description, brand, price and cached inventory of the queried product.
 ### Purchase Service
-Here comes the main part. We could create a new purchase, which sends a new purchase event to the saga orchestrator and triggers distributed transactions.
+Here comes the core part. Now we create a new purchase, which sends a new purchase event to the saga orchestrator and triggers distributed transactions.
 ```bash
 curl -X POST localhost/api/purchase -H "Authorization: bearer <access_token>" \
     --data '{"purchase_items":[{"product_id":<product_id>,"amount":1}],"payment":{"currency_code":"NT"}}'
 ```
 
-After we create a purchase, we could subscribe to `/api/purchase/result` to receive **realtime transaction results**. The purchase service pushes results using [server-sent events (SSE)](https://developer.mozilla.org/zh-TW/docs/Web/API/Server-sent_events/Using_server-sent_events). The following code example shows how to subscribe to server-sent events using Javascript. We will use [this library](https://github.com/Yaffle/EventSource) to send SSE request with Authorization header.
+After creating a purchase, we could subscribe to `/api/purchase/result` to receive **realtime transaction results**. The purchase service pushes results using [server-sent events (SSE)](https://developer.mozilla.org/zh-TW/docs/Web/API/Server-sent_events/Using_server-sent_events). The following code example shows how to subscribe to server-sent events using Javascript. We will use [this library](https://github.com/Yaffle/EventSource) to send SSE request with `Authorization` header.
 
 ```javascript
 var script = document.createElement('script');script.src = "https://unpkg.com/event-source-polyfill@1.0.9/src/eventsource.js";document.getElementsByTagName('head')[0].appendChild(script);
@@ -120,13 +120,13 @@ curl "localhost/api/payment/<payment_id>"  -H "Authorization: bearer <access_tok
 ## Observibility
 All services could be configured to expose Prometheus metrics and send tracing spans. By default, all services have their Prometheus metric endpoints serving on port `8080`. As for distributed tracing, we could simply enable it by setting environment variable `OC_AGENT_HOST` to the address of our Opencensus collector.
 
-We could visit our Jaeger web UI at `http://localhost:16686`. We could see tracing spans of API calls related to the current request, starting from our Traefik router. For example, the following figure shows a request that queries `/api/order/<order_id>`. We can see that once order service receives the request, it authenticates it first by calling `auth.AuthService.Auth`, a gRPC authentication API provided by account service. If the authentication is successful, order service will continue processing the request. To obtain a complete order, order service will ask product service for details of purchased products through another gRPC call `product.ProductService.GetProducts`.
+Visit the Jaeger web UI at `http://localhost:16686`. We can see all tracing spans of our API calling chains, starting from Traefik. For example, the following figure shows a request that queries `/api/order/<order_id>`. We can see that once order service receives the request, it authenticates the request first by calling `auth.AuthService.Auth`, a gRPC authentication API provided by account service. If the authentication is successful, order service will continue processing the request. To obtain a complete order, order service will ask product service for details of purchased products through another gRPC call `product.ProductService.GetProducts`.
 
 ![](https://i.imgur.com/GLC0UeH.png)
 
-Let's see a more complexed example. This figure shows how transaction services interact with each other after we create a new purchase. The authentication process is similar to the previous example. After purchase service authenticates the request successfully, it publishes a `CreatePurchaseCmd` event to our message broker. Orchestrator service will then receive the event and start saga transactions.
+Let's see a more complexed example. This figure shows how transaction services interact with each other after we create a new purchase. The authentication process is similar to the previous example. After purchase service authenticates the request successfully, it publishes a `CreatePurchaseCmd` event to the message broker. Orchestrator service will then receive the event and start saga transactions.
 
-Here comes the interesting part. Each transaction service adds the current span context to the event before publishing it. When a subscriber receives a new event, it extracts the span context from it. This extracted span then becomes the parent span of the current span. By doing this, we could generate a full pub/sub calling chain across all transactions. 
+Here comes the interesting part. Each transaction service adds the current span context to the event before publishing it. When a subscriber receives a new event, it extracts the span context from the event payload. This extracted span then becomes the parent span of the current span. By doing this, we could generate a full pub/sub calling chain across all transactions. 
 
 ![](https://i.imgur.com/u0icht4.png)
 
