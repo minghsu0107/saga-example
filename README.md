@@ -124,7 +124,7 @@ We could visit our Jaeger web UI at `http://localhost:16686`. We could see traci
 
 ![](https://i.imgur.com/GLC0UeH.png)
 
-Let's see a more complexed example. This figure shows how services participate in the saga transaction after we create a new purchase to `/api/purchase`. The authentication process is similar to the previous example. After purchase service authenticates the request successfully, it publishes a `CreatePurchaseCmd` event to our message broker. Orchestrator service will then receive the event and start saga transactions.
+Let's see a more complexed example. This figure shows how transaction services interact with each other after we create a new purchase. The authentication process is similar to the previous example. After purchase service authenticates the request successfully, it publishes a `CreatePurchaseCmd` event to our message broker. Orchestrator service will then receive the event and start saga transactions.
 
 Here comes the interesting part. Each transaction service adds the current span context to the event before publishing it. When a subscriber receives a new event, it extracts the span context from it. This extracted span then becomes the parent span of the current span. By doing this, we could generate a full pub/sub calling chain across all transactions. 
 
