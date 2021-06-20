@@ -84,7 +84,7 @@ curl "localhost/api/product/<product_id>"
 ```
 This will return the name, description, brand, price and cached inventory of the queried product.
 ### Purchase Service
-Here comes the core part. Now we create a new purchase, which sends a new purchase event to the saga orchestrator and triggers distributed transactions.
+Here comes the core part. We are going to create a new purchase, which sends a new purchase event to the saga orchestrator and triggers distributed transactions.
 ```bash
 curl -X POST localhost/api/purchase -H "Authorization: bearer <access_token>" \
     --data '{"purchase_items":[{"product_id":<product_id>,"amount":1}],"payment":{"currency_code":"NT"}}'
