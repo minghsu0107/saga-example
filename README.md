@@ -28,9 +28,15 @@ An all-in-one docker-compose deployment is provided, which includes the followin
   - Jaeger - preserveing and querying tracing spans.
 - NATS Streaming - message broker for saga events and streaming results.
 ## Usage
-To run all services locally, execute the following command.
+To run all services locally via docker-compose, execute:
 ```bash
-docker-compose up -d
+./run.sh run
+```
+This will bootsrap all services as well as their replicas in Docker containers.
+
+To stop all services, execute:
+```bash
+./run.sh stop
 ```
 ### Account Service
 First, we need to signup a new user:
