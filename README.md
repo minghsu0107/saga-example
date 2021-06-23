@@ -1,7 +1,7 @@
 # Saga Example
 A saga pattern implementation dealing with distributed transactions in a Microservices architecture, written in Golang.
 
-Related repositories:
+Related repositories (10K+ LOC):
 - https://github.com/minghsu0107/saga-purchase
 - https://github.com/minghsu0107/saga-account
 - https://github.com/minghsu0107/saga-product
