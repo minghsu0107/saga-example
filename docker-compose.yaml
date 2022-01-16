@@ -63,7 +63,7 @@ services:
       - "8080"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.saga-account-http.rule=PathPrefix(`/api/auth`) || PathPrefix(`/api/info`)"
+      - "traefik.http.routers.saga-account-http.rule=PathPrefix(`/api/account`)"
       - "traefik.http.routers.saga-account-http.entrypoints=web"
       - "traefik.http.routers.saga-account-http.service=saga-account-http"
       - "traefik.http.services.saga-account-http.loadbalancer.server.port=80"
