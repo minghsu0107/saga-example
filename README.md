@@ -44,37 +44,37 @@ To stop all services, execute:
 ### Account Service
 First, we need to signup a new user:
 ```bash
-curl -X POST localhost/api/auth/signup \
+curl -X POST localhost/api/account/auth/signup \
     --data '{"password":"abcd5432","firstname":"ming","lastname":"hsu","email":"ming@ming.com","address":"taipei","phone_number":"1234567"}'
 ```
 User account login:
 ```bash
-curl -X POST localhost/api/auth/login \
+curl -X POST localhost/api/account/auth/login \
     --data '{"email":"ming@ming.com","password":"abcd5432"}'
 ```
 This will return a new token pair (refresh token + access token). We should provide the access token in the `Authorization` header for those APIs with authentication.
 
 We could obtain a new token pair by refreshing with the refresh token:
 ```bash
-curl -X POST localhost/api/auth/refresh \
+curl -X POST localhost/api/account/auth/refresh \
     --data '{"refresh_token":"<refresh_token>"}'
 ```
-Get user account information:
+Get user personal information:
 ```bash
-curl localhost/api/info/account -H "Authorization: bearer <access_token>"
+curl localhost/api/account/info/person -H "Authorization: bearer <access_token>"
 ```
-Update user account information:
+Update user personal information:
 ```bash
-curl -X PUT localhost/api/info/account -H "Authorization: bearer <access_token>" \
+curl -X PUT localhost/api/account/info/person -H "Authorization: bearer <access_token>" \
     --data '{"firstname":"newfirst","lastname":"newlast","email":"ming3@ming.com"}'
 ```
 Get user shipping information:
 ```bash
-curl localhost/api/info/shipping -H "Authorization: bearer <access_token>"
+curl localhost/api/account/info/shipping -H "Authorization: bearer <access_token>"
 ```
 Update user shipping information:
 ```bash
-curl -X PUT localhost/api/info/shipping -H "Authorization: bearer <access_token>" \
+curl -X PUT localhost/api/account/info/shipping -H "Authorization: bearer <access_token>" \
     --data '{"address":"japan","phone_number":"54321"}'
 ```
 ### Product Service
