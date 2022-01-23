@@ -25,6 +25,8 @@ services:
     restart: always
     environment:
       GIN_MODE: "release"
+      REDIS_ADDRS: "redis-node1:7000,redis-node2:7001,redis-node3:7002,redis-node4:7003,redis-node5:7004,redis-node6:7005"
+      REDIS_PASSWORD: ${REDIS_PASSWD}
       NATS_CLUSTER_ID: "test-cluster"
       NATS_URL: "nats://nats-streaming:4222"
       # RPC_AUTH_SVC_HOST: "saga-account:8000" # using client LB
@@ -167,6 +169,8 @@ services:
     restart: always
     environment:
       APP: "orchestrator"
+      REDIS_ADDRS: "redis-node1:7000,redis-node2:7001,redis-node3:7002,redis-node4:7003,redis-node5:7004,redis-node6:7005"
+      REDIS_PASSWORD: ${REDIS_PASSWD}
       NATS_CLUSTER_ID: "test-cluster"
       NATS_URL: "nats://nats-streaming:4222"
       NATS_QUEUE_GROUP: "orchestrator-queue"
