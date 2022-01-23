@@ -9,26 +9,28 @@ Related repositories (10K+ LOC):
 
 An all-in-one docker-compose deployment is provided, which includes the following components:
 - Traefik - edge proxy that is responsible for external traffic routing and internal grpc load-balancing. 
-- [account service](https://github.com/minghsu0107/saga-account) - service that handles login, sigup, authentication, and token management.
-- [purchase service](https://github.com/minghsu0107/saga-purchase) - service that creates purchase and streams results of each saga step.
-- [transaction services](https://github.com/minghsu0107/saga-product)
-  - product service - service that creates and checks products; updates product inventories.
-  - order service - service that creates and queries orders.
-  - payment service - service that creates and queries payments.
-  - orchestrator service - **stateless** saga orchestrator.
+- [Account service](https://github.com/minghsu0107/saga-account) - service that handles login, sigup, authentication, and token management.
+- [Purchase service](https://github.com/minghsu0107/saga-purchase) - service that creates purchase and streams results of each saga step.
+- [Transaction services](https://github.com/minghsu0107/saga-product)
+  - Product service - service that creates and checks products; updates product inventories.
+  - Order service - service that creates and queries orders.
+  - Payment service - service that creates and queries payments.
+  - Orchestrator service - **stateless** saga orchestrator.
 - Local databases
   - Account database (MySQL 8.0)
   - Product database (MySQL 8.0)
   - Payment database (MySQL 8.0)
   - Order database (MySQL 8.0)
-- Six-node redis cluster - in-memory cache for account information and product details.
+- Six-node redis cluster 
+  - In-memory cache for account, product, order, and payment.
+  - Pubsub for local cache invalidation and purchase result streaming
 - Observibility
   - Prometheus - pulling metrics from all services.
   - Opencensus collector - collecting tracing spans accross service boundaries.
   - Jaeger - preserveing and querying tracing spans.
 - NATS Streaming - message broker for saga events and streaming results.
 
-The folloing diagram shows an overview of the architecture.
+The following diagram shows a brief overview of the architecture.
 ![](./architecture.png)
 ## Usage
 To run all services locally via docker-compose, execute:
