@@ -139,7 +139,11 @@ curl "localhost/api/payment/<payment_id>"  -H "Authorization: bearer <access_tok
 ## Observibility
 All services could be configured to expose Prometheus metrics and send tracing spans. By default, all services have their Prometheus metric endpoints exposed on port `8080`. As for distributed tracing, we could simply enable it by setting environment variable `OC_AGENT_HOST` to the address of our Opencensus collector.
 
-Visit the Jaeger web UI at `http://localhost:16686`. We can see all tracing spans of our API calling chains, starting from Traefik. For example, the following figure shows a request that queries `/api/order/<order_id>`. We can see that once order service receives the request, it authenticates the request first by calling `auth.AuthService.Auth`, a gRPC authentication API provided by account service. If the authentication is successful, order service will continue processing the request. To obtain a complete order, order service will ask product service for details of purchased products through another gRPC call `product.ProductService.GetProducts`.
+To check whether all services are alive, visit `http://localhost:9090/targets`.
+
+<img width="1792" alt="image" src="https://user-images.githubusercontent.com/50090692/150729950-aea0687a-ee0f-41f1-8220-a9febcf20a72.png">
+
+Visit the Jaeger web UI at `http://localhost:16686`. We can check all tracing spans of our API calling chains, starting from Traefik. For example, the following figure shows a request that queries `/api/order/<order_id>`. We can see that once order service receives the request, it authenticates the request first by calling `auth.AuthService.Auth`, a gRPC authentication API provided by account service. If the authentication is successful, order service will continue processing the request. To obtain a complete order, order service will ask product service for details of purchased products through another gRPC call `product.ProductService.GetProducts`.
 
 ![](https://i.imgur.com/GLC0UeH.png)
 
