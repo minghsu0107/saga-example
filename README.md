@@ -22,8 +22,9 @@ An all-in-one docker-compose deployment is provided, which includes the followin
   - Payment database (MySQL 8.0)
   - Order database (MySQL 8.0)
 - Six-node redis cluster 
-  - In-memory cache for account, product, order, and payment.
-  - Pubsub for local cache invalidation and purchase result streaming.
+  - As an in-memory cache for account, product, order, and payment.
+  - As a pub/sub for local cache invalidation
+  - As a streaming platform for obtaining real-time purchase result.
 - Observibility
   - Prometheus - pulling metrics from all services.
   - Opencensus collector - collecting tracing spans accross service boundaries.
