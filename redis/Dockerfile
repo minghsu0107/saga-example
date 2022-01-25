@@ -1,4 +1,4 @@
-FROM redis:5.0.1-alpine
+FROM redis:6.2.6-alpine3.15
 
 COPY rediscluster.conf /etc/redis/rediscluster.conf
 ENTRYPOINT redis-server /etc/redis/rediscluster.conf
