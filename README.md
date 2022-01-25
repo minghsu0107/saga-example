@@ -107,11 +107,11 @@ curl -X POST localhost/api/purchase -H "Authorization: bearer <access_token>" \
     --data '{"purchase_items":[{"product_id":<product_id>,"amount":1}],"payment":{"currency_code":"NT"}}'
 ```
 
-After creating a purchase, we can subscribe to `/api/purchase/result/<purchase_id>` to receive **realtime transaction results**. The purchase service pushes results using [server-sent events (SSE)](https://developer.mozilla.org/zh-TW/docs/Web/API/Server-sent_events/Using_server-sent_events). The following code example shows how to subscribe to server-sent events using Javascript. We will use [this library](https://github.com/Yaffle/EventSource) to send SSE request with `Authorization` header.
+After creating a purchase, we can subscribe to `/api/purchase/result` to receive **realtime transaction results**. The purchase service pushes results using [server-sent events (SSE)](https://developer.mozilla.org/zh-TW/docs/Web/API/Server-sent_events/Using_server-sent_events). The following code example shows how to subscribe to server-sent events using Javascript. We will use [this library](https://github.com/Yaffle/EventSource) to send SSE request with `Authorization` header.
 
 ```javascript
 var script = document.createElement('script');script.src = "https://unpkg.com/event-source-polyfill@1.0.9/src/eventsource.js";document.getElementsByTagName('head')[0].appendChild(script);
-var es = new EventSourcePolyfill('http://localhost/api/purchase/result/<purchase_id>', {
+var es = new EventSourcePolyfill('http://localhost/api/purchase/result', {
   headers: {
     'Authorization': 'bearer <access_token>'
   },
