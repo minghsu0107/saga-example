@@ -23,7 +23,7 @@ An all-in-one docker-compose deployment is provided, which includes the followin
   - Order database (MySQL 8.0)
 - Six-node redis cluster 
   - As an in-memory cache for account, product, order, and payment.
-  - As a pub/sub for local cache invalidation
+  - As a pub/sub for local cache invalidation.
   - As a streaming platform for obtaining real-time purchase result.
 - Observibility
   - Prometheus - pulling metrics from all services.
