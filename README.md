@@ -29,7 +29,7 @@ An all-in-one docker-compose deployment is provided, which includes the followin
   - Prometheus - pulling metrics from all services.
   - Opencensus collector - collecting tracing spans accross service boundaries.
   - Jaeger - preserveing and querying tracing spans.
-- NATS Streaming - message broker for saga events and streaming results.
+- NATS Streaming - message broker for saga commands and events.
 
 The following diagram shows a brief overview of the architecture.
 ![](./architecture.png)
