@@ -125,7 +125,7 @@ es.addEventListener("data", listener);
 
 If the subscription is successful, we would receive realtime results like the following:
 
-![](https://i.imgur.com/zo0IuRK.png)
+<img width="1470" alt="image" src="https://user-images.githubusercontent.com/50090692/151049964-b4752356-ca9f-4e90-ae85-247e538778b9.png">
 ### Order Service
 Next, we could check whether our order is successfully created:
 ```bash 
