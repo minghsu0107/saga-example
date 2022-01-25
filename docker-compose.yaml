@@ -85,8 +85,8 @@ services:
       REDIS_PASSWORD: ${REDIS_PASSWD}
       NATS_CLUSTER_ID: "test-cluster"
       NATS_URL: "nats://nats-streaming:4222"
-      NATS_QUEUE_GROUP: "product-queue"
-      NATS_DURABLE_NAME: "product-durable"
+      NATS_SUBSCRIBER_QUEUE_GROUP: "product-queue"
+      NATS_SUBSCRIBER_DURABLE_NAME: "product-durable"
       OC_AGENT_HOST: "oc-collector:55678"
     depends_on:
       - productdb
@@ -117,8 +117,8 @@ services:
       REDIS_PASSWORD: ${REDIS_PASSWD}
       NATS_CLUSTER_ID: "test-cluster"
       NATS_URL: "nats://nats-streaming:4222"
-      NATS_QUEUE_GROUP: "order-queue"
-      NATS_DURABLE_NAME: "order-durable"
+      NATS_SUBSCRIBER_QUEUE_GROUP: "order-queue"
+      NATS_SUBSCRIBER_DURABLE_NAME: "order-durable"
       RPC_AUTH_SVC_HOST: "reverse-proxy:80"
       RPC_PRODUCT_SVC_HOST: "reverse-proxy:80"
       OC_AGENT_HOST: "oc-collector:55678"
@@ -147,8 +147,8 @@ services:
       REDIS_PASSWORD: ${REDIS_PASSWD}
       NATS_CLUSTER_ID: "test-cluster"
       NATS_URL: "nats://nats-streaming:4222"
-      NATS_QUEUE_GROUP: "payment-queue"
-      NATS_DURABLE_NAME: "payment-durable"
+      NATS_SUBSCRIBER_QUEUE_GROUP: "payment-queue"
+      NATS_SUBSCRIBER_DURABLE_NAME: "payment-durable"
       RPC_AUTH_SVC_HOST: "reverse-proxy:80"
       OC_AGENT_HOST: "oc-collector:55678"
     depends_on:
@@ -173,8 +173,8 @@ services:
       REDIS_PASSWORD: ${REDIS_PASSWD}
       NATS_CLUSTER_ID: "test-cluster"
       NATS_URL: "nats://nats-streaming:4222"
-      NATS_QUEUE_GROUP: "orchestrator-queue"
-      NATS_DURABLE_NAME: "orchestrator-durable"
+      NATS_SUBSCRIBER_QUEUE_GROUP: "orchestrator-queue"
+      NATS_SUBSCRIBER_DURABLE_NAME: "orchestrator-durable"
       OC_AGENT_HOST: "oc-collector:55678"
     expose:
       - "8080"
