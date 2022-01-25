@@ -340,7 +340,7 @@ services:
       - redis-node2
       - redis-node3
   redis-cluster-creator:
-    image: redis:5.0.1-alpine
+    image: redis:6.2.6-alpine3.15
     entrypoint: [/bin/sh,-c,'echo "yes" | redis-cli -a ${REDIS_PASSWD} --cluster create ${REDIS_CLUSTER_IP}:7000 ${REDIS_CLUSTER_IP}:7001 ${REDIS_CLUSTER_IP}:7002 ${REDIS_CLUSTER_IP}:7003 ${REDIS_CLUSTER_IP}:7004 ${REDIS_CLUSTER_IP}:7005 --cluster-replicas 1']
     depends_on:
       - redis-node1
