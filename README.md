@@ -117,7 +117,7 @@ var es = new EventSourcePolyfill('http://localhost/api/purchase/result', {
   },
 });
 var listener = function (event) {
-  var data = JSON.parse(event.data);
+  var data = JSON.stringify(event.data);
   console.log(data);
 };
 es.addEventListener("data", listener);
