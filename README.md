@@ -34,7 +34,10 @@ An all-in-one docker-compose deployment is provided, which includes the followin
 - NATS Streaming - message broker for saga commands and events.
 
 The following diagram shows a brief overview of the architecture.
-![](./architecture.png)
+
+<img width="1223" alt="image" src="https://user-images.githubusercontent.com/50090692/151692728-d8a1cd30-5b6b-4b97-93a9-8960ba8fefc7.png">
+
+This diagram omits cache data flow, bloom filters, and local databases.
 ## Usage
 To run all services locally via docker-compose, execute:
 ```bash
