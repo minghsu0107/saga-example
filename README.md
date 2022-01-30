@@ -23,7 +23,7 @@ An all-in-one docker-compose deployment is provided, which includes the followin
   - Order database (MySQL 8.0)
 - Six-node redis cluster 
   - As an in-memory cache for account, product, order, and payment.
-  - As bloom filters to prevent cache penetration (using [Redis Bloom](https://oss.redis.com/redisbloom/)).
+  - As bloom filters to avoid cache penetration (using [Redis Bloom](https://oss.redis.com/redisbloom/)).
   - As a pub/sub for local cache invalidation.
   - As a streaming platform for obtaining real-time purchase result.
 - Observibility
