@@ -144,9 +144,9 @@ Finally, we could check whether our payment is successfully created:
 curl "localhost/api/payment/<payment_id>"  -H "Authorization: bearer <access_token>"
 ```
 ## Observibility
-All services could be configured to expose Prometheus metrics and send tracing spans. By default, all services have their Prometheus metric endpoints exposed on port `8080`. As for distributed tracing, we could simply enable it by setting environment variable `OC_AGENT_HOST` to the address of our Opencensus collector.
+All services could be configured to expose Prometheus metrics and send tracing spans. By default, all services have their Prometheus metric endpoints exposed on port `8080`. As for distributed tracing, we could simply enable it by setting environment variable `JAEGER_URL` to the Jaeger collection endpoint.
 
-To check whether all services are alive, visit `http://localhost:9090/targets`.
+To check whether all services are alive, visit Prometheus at `http://localhost:9090/targets`.
 
 <img width="1792" alt="image" src="https://user-images.githubusercontent.com/50090692/150729950-aea0687a-ee0f-41f1-8220-a9febcf20a72.png">
 
