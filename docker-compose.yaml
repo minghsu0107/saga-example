@@ -9,11 +9,11 @@ services:
       - "--providers.docker"
       - "--providers.docker.exposedbydefault=false"
       - --tracing=true
-      - --tracing.zipkin=true
-      - --tracing.zipkin.httpEndpoint=http://oc-collector:9411/api/v2/spans
-      - --tracing.zipkin.sameSpan=true
-      - --tracing.zipkin.id128Bit=true
-      - --tracing.zipkin.sampleRate=1
+      - --tracing.jaeger=true
+      - --tracing.jaeger.collector.endpoint=http://jaeger:14268/api/traces?format=jaeger.thrift
+      - --tracing.jaeger.traceContextHeaderName=uber-trace-id
+      - --tracing.jaeger.gen128Bit
+      - --tracing.jaeger.samplingParam=1.0
       - --accesslog=true # output log to stdout
     ports:
       - "80:80"
@@ -29,10 +29,9 @@ services:
       REDIS_PASSWORD: ${REDIS_PASSWD}
       NATS_CLUSTER_ID: "test-cluster"
       NATS_URL: "nats://nats-streaming:4222"
-      # RPC_AUTH_SVC_HOST: "saga-account:8000" # using client LB
       RPC_AUTH_SVC_HOST: "reverse-proxy:80" # using traefik LB
       RPC_PRODUCT_SVC_HOST: "reverse-proxy:80"
-      OC_AGENT_HOST: "oc-collector:55678"
+      JAEGER_URL: http://jaeger:14268/api/traces
     depends_on:
       - nats-streaming
       - saga-account
@@ -55,7 +54,7 @@ services:
       REDIS_PASSWORD: ${REDIS_PASSWD}
       JWT_ACCESS_TOKEN_EXPIRE_SECOND: "10800"
       JWT_REFRESH_TOKEN_EXPIRE_SECOND: "86400"
-      OC_AGENT_HOST: "oc-collector:55678"
+      JAEGER_URL: http://jaeger:14268/api/traces
     depends_on:
       - accountdb
       - redis-cluster-creator
@@ -87,7 +86,7 @@ services:
       NATS_URL: "nats://nats-streaming:4222"
       NATS_SUBSCRIBER_QUEUE_GROUP: "product-queue"
       NATS_SUBSCRIBER_DURABLE_NAME: "product-durable"
-      OC_AGENT_HOST: "oc-collector:55678"
+      JAEGER_URL: http://jaeger:14268/api/traces
     depends_on:
       - productdb
       - redis-cluster-creator
@@ -121,7 +120,7 @@ services:
       NATS_SUBSCRIBER_DURABLE_NAME: "order-durable"
       RPC_AUTH_SVC_HOST: "reverse-proxy:80"
       RPC_PRODUCT_SVC_HOST: "reverse-proxy:80"
-      OC_AGENT_HOST: "oc-collector:55678"
+      JAEGER_URL: http://jaeger:14268/api/traces
     depends_on:
       - orderdb
       - saga-account
@@ -150,7 +149,7 @@ services:
       NATS_SUBSCRIBER_QUEUE_GROUP: "payment-queue"
       NATS_SUBSCRIBER_DURABLE_NAME: "payment-durable"
       RPC_AUTH_SVC_HOST: "reverse-proxy:80"
-      OC_AGENT_HOST: "oc-collector:55678"
+      JAEGER_URL: http://jaeger:14268/api/traces
     depends_on:
       - paymentdb
       - saga-account
@@ -175,7 +174,7 @@ services:
       NATS_URL: "nats://nats-streaming:4222"
       NATS_SUBSCRIBER_QUEUE_GROUP: "orchestrator-queue"
       NATS_SUBSCRIBER_DURABLE_NAME: "orchestrator-durable"
-      OC_AGENT_HOST: "oc-collector:55678"
+      JAEGER_URL: http://jaeger:14268/api/traces
     expose:
       - "8080"
   nats-streaming:
@@ -271,14 +270,6 @@ services:
     ports:
       - 14268:14268
       - 16686:16686
-  oc-collector:
-    image: omnition/opencensus-collector:0.1.10
-    command:
-      - --config=/conf/occollector-config.yaml
-    ports:
-      - 55678:55678
-    volumes:
-      - ./occollector/occollector-config.yaml:/conf/occollector-config.yaml
   redis-node1:
     build:
       context: redis
