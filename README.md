@@ -158,7 +158,7 @@ Let's see a more complexed example. This figure shows how transaction services i
 
 Here comes the interesting part. Each transaction service adds the current span context to the event before publishing it. When a subscriber receives a new event, it extracts the span context from the event payload. This extracted span then becomes the parent span of the current span. By doing this, we could generate a full pub/sub calling chain across all transactions. 
 
-![](https://i.imgur.com/u0icht4.png)
+<img width="1674" alt="image" src="https://user-images.githubusercontent.com/50090692/152184830-034f8e34-9ba7-437b-8dd4-609f9e5e58c2.png">
 
 In addition, Jaeger will create service topologies for our spans. The following figure shows the topology when a client creates a new purchase.
 
