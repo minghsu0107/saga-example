@@ -80,7 +80,7 @@ services:
       APP: "product"
       GIN_MODE: "release"
       DB_DSN: "ming:password@tcp(productdb:3306)/product?charset=utf8mb4&parseTime=True&loc=Local"
-      REDIS_ADDRS: "redis-node1:7000,redis-node1:7001,redis-node1:7002,redis-node1:7003,redis-node1:7004,redis-node1:7005"
+      REDIS_ADDRS: "redis-node1:7000,redis-node2:7001,redis-node3:7002,redis-node4:7003,redis-node5:7004,redis-node6:7005"
       REDIS_PASSWORD: ${REDIS_PASSWD}
       NATS_CLUSTER_ID: "test-cluster"
       NATS_URL: "nats://nats-streaming:4222"
@@ -112,7 +112,7 @@ services:
       APP: "order"
       GIN_MODE: "release"
       DB_DSN: "ming:password@tcp(orderdb:3306)/order?charset=utf8mb4&parseTime=True&loc=Local"
-      REDIS_ADDRS: "redis-node1:7000,redis-node1:7001,redis-node1:7002,redis-node1:7003,redis-node1:7004,redis-node1:7005"
+      REDIS_ADDRS: "redis-node1:7000,redis-node2:7001,redis-node3:7002,redis-node4:7003,redis-node5:7004,redis-node6:7005"
       REDIS_PASSWORD: ${REDIS_PASSWD}
       NATS_CLUSTER_ID: "test-cluster"
       NATS_URL: "nats://nats-streaming:4222"
@@ -142,7 +142,7 @@ services:
       APP: "payment"
       GIN_MODE: "release"
       DB_DSN: "ming:password@tcp(paymentdb:3306)/payment?charset=utf8mb4&parseTime=True&loc=Local"
-      REDIS_ADDRS: "redis-node1:7000,redis-node1:7001,redis-node1:7002,redis-node1:7003,redis-node1:7004,redis-node1:7005"
+      REDIS_ADDRS: "redis-node1:7000,redis-node2:7001,redis-node3:7002,redis-node4:7003,redis-node5:7004,redis-node6:7005"
       REDIS_PASSWORD: ${REDIS_PASSWD}
       NATS_CLUSTER_ID: "test-cluster"
       NATS_URL: "nats://nats-streaming:4222"
