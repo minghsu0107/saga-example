@@ -152,7 +152,7 @@ To check whether all services are alive, visit Prometheus at `http://localhost:9
 
 Visit the Jaeger web UI at `http://localhost:16686`. We can check all tracing spans of our API calling chains, starting from Traefik. For example, the following figure shows a request that queries `/api/order/<order_id>`. We can see that once order service receives the request, it authenticates the request first by calling `auth.AuthService.Auth`, a gRPC authentication API provided by account service. If the authentication is successful, order service will continue processing the request. To obtain a complete order, order service will ask product service for details of purchased products through another gRPC call `product.ProductService.GetProducts`.
 
-![](https://i.imgur.com/GLC0UeH.png)
+<img width="1792" alt="image" src="https://user-images.githubusercontent.com/50090692/153759779-b60c1086-35dd-4b08-890b-6b925b0f9374.png">
 
 Let's see a more complexed example. This figure shows how transaction services interact with each other after we create a new purchase. The authentication process is similar to the previous example. After purchase service authenticates the request successfully, it publishes a `CreatePurchaseCmd` event to the message broker. Orchestrator service will then receive the event and start saga transactions. The following diagram show all related traces in a single purchase, including Redis operations within each service.
 
