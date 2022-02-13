@@ -154,11 +154,11 @@ Visit the Jaeger web UI at `http://localhost:16686`. We can check all tracing sp
 
 ![](https://i.imgur.com/GLC0UeH.png)
 
-Let's see a more complexed example. This figure shows how transaction services interact with each other after we create a new purchase. The authentication process is similar to the previous example. After purchase service authenticates the request successfully, it publishes a `CreatePurchaseCmd` event to the message broker. Orchestrator service will then receive the event and start saga transactions.
+Let's see a more complexed example. This figure shows how transaction services interact with each other after we create a new purchase. The authentication process is similar to the previous example. After purchase service authenticates the request successfully, it publishes a `CreatePurchaseCmd` event to the message broker. Orchestrator service will then receive the event and start saga transactions. The following diagram show all related traces in a single purchase, including Redis operations within each service.
 
-Here comes the interesting part. Each transaction service adds the current span context to the event before publishing it. When a subscriber receives a new event, it extracts the span context from the event payload. This extracted span then becomes the parent span of the current span. By doing this, we could generate a full pub/sub calling chain across all transactions. 
+<img width="1792" alt="image" src="https://user-images.githubusercontent.com/50090692/153759579-4436f636-d7a4-4c7e-b80a-dee0bd7c28cf.png">
 
-<img width="1674" alt="image" src="https://user-images.githubusercontent.com/50090692/152184830-034f8e34-9ba7-437b-8dd4-609f9e5e58c2.png">
+Each transaction service adds the current span context to the event before publishing it. When a subscriber receives a new event, it extracts the span context from the event payload. This extracted span then becomes the parent span of the current span. By doing this, we could generate a full pub/sub calling chain across all transactions. 
 
 In addition, Jaeger will create service topologies for our spans. The following figure shows the topology when a client creates a new purchase.
 
