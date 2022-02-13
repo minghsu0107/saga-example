@@ -154,9 +154,9 @@ Visit the Jaeger web UI at `http://localhost:16686`. We can check all tracing sp
 
 <img width="1792" alt="image" src="https://user-images.githubusercontent.com/50090692/153759779-b60c1086-35dd-4b08-890b-6b925b0f9374.png">
 
-Let's see a more complexed example. This figure shows how transaction services interact with each other after we create a new purchase. The authentication process is similar to the previous example. After purchase service authenticates the request successfully, it publishes a `CreatePurchaseCmd` event to the message broker. Orchestrator service will then receive the event and start saga transactions. The following diagram show all related traces in a single purchase, including Redis operations within each service.
+Let's see a more complexed example. This figure shows how transaction services interact with each other after we create a new purchase. The authentication process is similar to the previous example. After purchase service authenticates the request successfully, it publishes a `CreatePurchaseCmd` event to the message broker. Orchestrator service will then receive the event and start saga transactions. The following diagram show all related traces in a single purchase, including traces of streaming results and Redis operations.
 
-<img width="1792" alt="image" src="https://user-images.githubusercontent.com/50090692/153759579-4436f636-d7a4-4c7e-b80a-dee0bd7c28cf.png">
+<img width="1792" alt="image" src="https://user-images.githubusercontent.com/50090692/153759967-43e2d4c4-83cf-4cad-a94d-3446b3b0c442.png">
 
 Each transaction service adds the current span context to the event before publishing it. When a subscriber receives a new event, it extracts the span context from the event payload. This extracted span then becomes the parent span of the current span. By doing this, we could generate a full pub/sub calling chain across all transactions. 
 
