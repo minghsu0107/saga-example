@@ -1,5 +1,5 @@
 # Saga Example
-Saga pattern is a failure management pattern that helps establish consistency in distributed applications, and coordinates transactions between multiple microservices to maintain data consistency. This repository shows an orchestration-based saga implementation.
+Saga pattern is a failure management pattern that helps establish consistency in distributed applications, and coordinates transactions between multiple microservices to maintain data consistency. This project shows an orchestration-based saga implementation.
 
 Related repositories (10K+ LOC):
 - https://github.com/minghsu0107/saga-purchase
