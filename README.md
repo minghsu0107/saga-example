@@ -34,7 +34,7 @@ An all-in-one docker-compose deployment is provided, which includes the followin
 
 The following diagram shows a brief overview of the architecture.
 
-<img width="1223" alt="image" src="https://user-images.githubusercontent.com/50090692/151692728-d8a1cd30-5b6b-4b97-93a9-8960ba8fefc7.png">
+<img width="1251" alt="image" src="https://user-images.githubusercontent.com/50090692/154828478-750e3f87-ab4b-4eb4-b8df-590a6b81ef28.png">
 
 This diagram omits cache data flow, bloom filters, and local databases.
 ## Usage
