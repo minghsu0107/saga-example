@@ -38,7 +38,7 @@ The following diagram shows a brief overview of the architecture.
 
 This diagram omits cache data flow, bloom filters, and local databases.
 ## Usage
-To run all services locally via docker-compose, execute:
+To run all services locally via docker-compose v1, execute:
 ```bash
 ./run.sh run
 ```
