@@ -143,7 +143,7 @@ Finally, we could check whether our payment is successfully created:
 ```bash
 curl "localhost/api/payment/<payment_id>"  -H "Authorization: bearer <access_token>"
 ```
-## Observibility
+## Observability
 All services could be configured to expose Prometheus metrics and send tracing spans. By default, all services have their Prometheus metric endpoints exposed on port `8080`. As for distributed tracing, we could simply enable it by setting environment variable `JAEGER_URL` to the Jaeger collection endpoint.
 
 To check whether all services are alive, visit Prometheus at `http://localhost:9090/targets`.
