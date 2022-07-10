@@ -23,7 +23,8 @@ An all-in-one docker-compose deployment is provided, which includes the followin
   - Order database (MySQL 8.0)
 - Six-node redis cluster 
   - As an in-memory cache for account, product, order, and payment.
-  - As bloom/Cuckoo filters for preventing cache penetration (using [Redis Bloom](https://oss.redis.com/redisbloom/)).
+  - As the bloom/cuckoo filter for preventing cache penetration (using [Redis Bloom](https://oss.redis.com/redisbloom/)).
+    - Possible issue: as we always check the bloom/cuckoo filter before querying database, we heavily reply on the data consistence between Redis and MySQL. If any write to the filter fails or the filter is evicted by Redis, however, the state of data will be inconsistent among cache and storage, causing false-positive queries.
   - As distributed locks for preventing cache avalanche
   - As a pub/sub for local cache invalidation.
   - As a streaming platform for obtaining real-time purchase result.
